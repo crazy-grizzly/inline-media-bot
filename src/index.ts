@@ -2,8 +2,8 @@ import 'dotenv/config';
 import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
 
-import { isActionAllowed } from './utils/isActionAllowed';
-import { isValidUrl } from './utils/isValidUrl';
+import { isActionAllowed } from './services/permissions';
+import { isValidUrl } from './services/validation';
 
 const { BOT_TOKEN } = process.env;
 
