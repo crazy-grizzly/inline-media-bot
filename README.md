@@ -10,3 +10,4 @@ Telegram bot for saving Instagram reels
 #### Misc info
 
 Telegram bots info: https://core.telegram.org/bots
+Telegraf lib: https://telegraf.js.org
