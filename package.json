@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/crazy-grizzly/inline-media-bot"
+    "url": "git@github.com:crazy-grizzly/inline-media-bot.git"
   },
   "homepage": "https://github.com/crazy-grizzly/inline-media-bot",
   "scripts": {
