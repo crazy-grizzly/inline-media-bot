@@ -45,6 +45,11 @@ jobs:
     needs: install_dependencies
     runs-on: ubuntu-latest
 
+    env:
+      COOKIE: ${{ secrets.COOKIE }}
+      USER_AGENT: ${{ secrets.USER_AGENT }}
+      X_IG_APP_ID: ${{ secrets.X_IG_APP_ID }}
+
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3

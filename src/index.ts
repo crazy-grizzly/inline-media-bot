@@ -1,9 +1,10 @@
 import 'dotenv/config';
+
 import { Telegraf } from 'telegraf';
 import { message } from 'telegraf/filters';
 
 import { isActionAllowed } from './services/permissions';
-import { isValidUrl } from './services/validation';
+import { getMediaScrapper } from './services/scrapper';
 
 const { BOT_TOKEN } = process.env;
 
@@ -30,13 +31,48 @@ bot.on('inline_query', async (ctx) => {
     return;
   }
 
-  const { query } = ctx.update.inline_query;
+  const query = (ctx.update.inline_query.query || '').replace(' ', '');
 
-  if (!isValidUrl(query)) {
-    return;
+  console.debug('Inline query', query);
+
+  if (!query) {
+    console.debug('Empty query');
+
+    return ctx.answerInlineQuery([]);
   }
 
-  // TODO: Do the URL retrieval logic
+  try {
+    const mediaScrapper = getMediaScrapper(query);
+    const media = await mediaScrapper.getMedia();
+
+    if (!media) {
+      return ctx.answerInlineQuery([
+        {
+          type: 'article',
+          id: '1',
+          title: 'Cannot get media',
+          input_message_content: {
+            message_text: 'Cannot get media',
+          },
+        }
+      ]);
+    }
+
+    return ctx.answerInlineQuery([media]);
+  } catch (error) {
+    console.error(error);
+
+    return ctx.answerInlineQuery([
+      {
+        type: 'article',
+        id: '1',
+        title: 'Error occurred',
+        input_message_content: {
+          message_text: 'Error occurred',
+        },
+      }
+    ]);
+  }
 });
 
 bot.on(message('text'), async (ctx) => {
@@ -57,8 +93,6 @@ bot.command('leave', async (ctx) => {
   }
 
   await ctx.reply('See ya 👋');
-  // TelegramError: 400: Bad Request: chat member status can't be changed in private chats
-  // await ctx.leaveChat();
 });
 
 bot.launch();
